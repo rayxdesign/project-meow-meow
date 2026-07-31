@@ -1,0 +1,202 @@
+:root {
+  --cream: #FFF7EE;
+  --ink: #3E2B2B;
+  --ink-soft: #6B5555;
+  --coral: #FF8FA3;
+  --butter: #FFC94A;
+  --sky: #6FB8E0;
+  --white: #FFFFFF;
+
+  --card-bg: #26303B;
+  --card-line: #121820;
+  --card-accent: #7FB3E0;
+  --card-text: #F4F6F8;
+
+  --radius: 22px;
+  --shadow: 0 10px 26px rgba(62, 43, 43, 0.14);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Quicksand', sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before, body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+  z-index: 0;
+  pointer-events: none;
+}
+body::before { width: 320px; height: 320px; background: var(--butter); top: -100px; left: -100px; }
+body::after { width: 380px; height: 380px; background: var(--sky); bottom: -140px; right: -120px; }
+
+.hero { position: relative; z-index: 1; text-align: center; padding: 44px 20px 20px; }
+
+.hero-badge { font-size: 2.2rem; display: inline-block; animation: wiggle 3.5s ease-in-out infinite; }
+
+h1 {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 3.1rem);
+  margin: 6px 0 8px;
+  color: var(--ink);
+  text-shadow: 3px 3px 0 rgba(255, 143, 163, 0.35);
+}
+
+.tagline { margin: 0 0 20px; color: var(--ink-soft); font-weight: 600; font-size: 1rem; }
+
+.controls { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.btn {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 13px 24px;
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary {
+  color: var(--white);
+  background: var(--coral);
+  border: none;
+  box-shadow: 0 8px 0 #E0637C, var(--shadow);
+}
+.btn-primary:hover:not(:disabled) { transform: translateY(-2px); }
+.btn-primary:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 4px 0 #E0637C, var(--shadow); }
+
+.btn-secondary {
+  color: var(--card-bg);
+  background: transparent;
+  border: 3px solid var(--card-bg);
+}
+.btn-secondary:hover { background: var(--card-bg); color: var(--white); }
+
+main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 30px 5vw 30px; }
+
+.status { text-align: center; padding: 60px 20px; color: var(--ink-soft); font-weight: 600; }
+.status .paws { font-size: 1.8rem; letter-spacing: 8px; animation: bounce 1.2s ease-in-out infinite; display: inline-block; margin-bottom: 10px; }
+.status button {
+  margin-top: 14px; font-family: 'Baloo 2', sans-serif; font-weight: 700;
+  background: var(--ink); color: var(--white); border: none;
+  padding: 10px 22px; border-radius: 999px; cursor: pointer;
+}
+
+/* ---- stage (single card view, index.html) ---- */
+.stage-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.stage { width: 100%; display: flex; justify-content: center; touch-action: pan-y; }
+
+.nav-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.nav-btn {
+  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 0.95rem;
+  background: var(--card-bg); color: var(--white); border: none;
+  padding: 12px 20px; border-radius: 999px; cursor: pointer;
+  box-shadow: 0 6px 0 var(--card-line);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nav-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.nav-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 3px 0 var(--card-line); }
+.nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.nav-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+.progress { font-weight: 700; color: var(--ink-soft); font-size: 0.9rem; min-width: 64px; text-align: center; }
+
+/* ---- grid (all-breeds.html) ---- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 22px; }
+
+/* ---- card ---- */
+.card { aspect-ratio: 3 / 4; perspective: 1200px; cursor: pointer; }
+.stage .card { width: min(88vw, 340px); }
+
+.card:not(.no-stagger) {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: cardIn 0.5s ease forwards;
+  animation-delay: calc(var(--i) * 35ms);
+}
+
+.card:focus-visible .card-inner { outline: 3px solid var(--ink); outline-offset: 4px; border-radius: var(--radius); }
+
+.card-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform 0.65s cubic-bezier(.68,-0.4,.32,1.35);
+  transform-style: preserve-3d;
+}
+.card.flipped .card-inner { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  border: 4px solid var(--card-line); overflow: hidden; background: var(--white);
+}
+
+.card-front { display: flex; flex-direction: column; }
+.card-front .photo-wrap { position: relative; flex: 1; background: linear-gradient(135deg, #f0f0f0, #e4e4e4); overflow: hidden; }
+.card-front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.card-front .no-photo { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; }
+.card-front .tape {
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%) rotate(-3deg);
+  width: 60px; height: 22px; background: rgba(255,255,255,0.55); border: 1px solid rgba(255,255,255,0.7); z-index: 2;
+}
+.card-front .name-plate {
+  font-family: 'Baloo 2', sans-serif; font-weight: 700; font-size: 0.95rem;
+  text-align: center; padding: 9px 6px; background: var(--card-bg); color: var(--card-text); line-height: 1.15;
+}
+.card-front .tap-hint { font-size: 0.65rem; font-weight: 500; opacity: 0.85; }
+
+.card-back {
+  transform: rotateY(180deg); background: var(--card-bg); color: var(--card-text);
+  padding: 16px 15px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto;
+}
+.card-back h3 { font-family: 'Baloo 2', sans-serif; margin: 0; font-size: 1.05rem; }
+
+.native-to { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); border-radius: 12px; padding: 6px 10px; }
+.native-to .geo-flag { font-size: 1.3rem; line-height: 1; }
+.native-to .native-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.75; }
+.native-to .native-value { font-size: 0.82rem; font-weight: 700; }
+
+.card-back .fact { font-size: 0.8rem; line-height: 1.35; font-weight: 500; margin: 0; }
+.card-back .meta-row { font-size: 0.75rem; font-weight: 700; opacity: 0.95; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: auto; }
+.chip { background: var(--card-accent); color: #16222C; padding: 3px 9px; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
+
+.card.pulse .card-face { animation: pulseGlow 1.4s ease; }
+
+footer { position: relative; z-index: 1; text-align: center; padding: 20px 20px 46px; color: var(--ink-soft); font-size: 0.8rem; font-weight: 600; }
+
+@keyframes cardIn { to { opacity: 1; transform: none; } }
+@keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(127, 179, 224, 0.7); }
+  70% { box-shadow: 0 0 0 20px rgba(127, 179, 224, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(127, 179, 224, 0); }
+}
+
+@media (max-width: 480px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .hero { padding: 34px 16px 18px; }
+  .btn, .nav-btn { padding: 11px 18px; font-size: 0.88rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-badge, .status .paws { animation: none; }
+  .card { animation: none; opacity: 1; transform: none; }
+  .card-inner { transition: none; }
+  .card.pulse .card-face { animation: none; }
+}
